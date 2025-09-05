@@ -31,9 +31,7 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
     final viewModel = ref.watch(currencyConverterVM);
 
     return Builder(builder: (context) {
-      if (viewModel is CurrencyConverterLoading) {
-        return const Center(child: CupertinoActivityIndicator());
-      }
+     
 
       if (viewModel is CurrencyConverterLoaded) {
         WidgetsBinding.instance.addPostFrameCallback((_) {

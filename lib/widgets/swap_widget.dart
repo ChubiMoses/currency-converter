@@ -26,15 +26,14 @@ class SwapImageIconWidget extends StatelessWidget {
                 final utilsProvider = context.read<UtilsProvider>();
                 // Swap base currency to target currency
                 final tempCode = utilsProvider.baseCode;
-                final tempAmount = utilsProvider.baseAmountController.text;
-                
+      
                 // Update base with target values
                 utilsProvider.setBaseCode(utilsProvider.targetCode);
-                utilsProvider.baseAmountController.text = utilsProvider.targetAmountController.text;
                 
                 // Update target with base values
                 utilsProvider.setTargetCode(tempCode);
-                utilsProvider.targetAmountController.text = tempAmount;
+                 utilsProvider.initTextField();
+
               },
               child: CircleAvatar(
                 backgroundColor: Color(0xFF1A237E),
