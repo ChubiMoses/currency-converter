@@ -1,4 +1,4 @@
-import 'package:ccapp/view/currency_converter_view.dart';
+import 'package:ccapp/views/currency_converter_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {

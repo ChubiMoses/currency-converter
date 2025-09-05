@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SwapWidget extends StatelessWidget {
   const SwapWidget({super.key});
@@ -16,10 +17,10 @@ class SwapWidget extends StatelessWidget {
               color: Color(0xFFE7E7EE),
             ),
           ),
-          const Center(
+           Center(
             child: CircleAvatar(
               backgroundColor: Color(0xFF1A237E),
-              child: Icon(Icons.swap_vert, color: Colors.white),
+              child: SvgPicture.asset("assets/images/swap.svg",)
             ),
           ),
         ],
