@@ -22,8 +22,8 @@ class CurrencyConverterModel {
     final String? timeNextUpdateUtc;
     final String? baseCode;
     final String? targetCode;
-    final double? conversionRate;
-    final double? conversionResult;
+    final dynamic conversionRate;
+    final dynamic conversionResult;
 
     factory CurrencyConverterModel.fromJson(Map<String, dynamic> json){ 
         return CurrencyConverterModel(

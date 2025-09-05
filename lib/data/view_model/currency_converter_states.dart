@@ -9,9 +9,9 @@ class CurrencyConverterLoading extends CurrencyConverterStates {}
 class CurrencyConverterSuccess extends CurrencyConverterStates {}
 
 class CurrencyConverterLoaded extends CurrencyConverterStates {
-  final CurrencyConverterModel allCurrencyConverterModel;
+  final CurrencyConverterModel currencyConverterViewViewModel;
 
-CurrencyConverterLoaded(this.allCurrencyConverterModel);
+CurrencyConverterLoaded(this.currencyConverterViewViewModel);
 }
 class CurrencyConverterError extends CurrencyConverterStates {
   final String error;

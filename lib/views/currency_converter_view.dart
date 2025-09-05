@@ -1,20 +1,25 @@
 
+import 'package:ccapp/utils/utils_provider.dart';
 import 'package:ccapp/widgets/currency_input_card.dart';
+import 'package:ccapp/widgets/exchange_rate_widget.dart';
 import 'package:ccapp/widgets/swap_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CurrencyConverterView extends StatelessWidget {
   const CurrencyConverterView({super.key});
 
   @override
   Widget build(BuildContext context) {
+   // final utilsProvider = context.watch<UtilsProvider>();
+
     return Scaffold(
       backgroundColor:Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+           
             children: [
               const Text(
                 'Currency Converter',
@@ -50,43 +55,19 @@ class CurrencyConverterView extends StatelessWidget {
                   child: Column(
                     children: [
                         CurrencyInputCard(
-                          label: 'Amount',
-                          flag: 'SG',
-                          currencyCode: 'SGD',
-                          amount: '1000.00',
-                          type: "Base",
+                          isBase: true,
                         ),
                         const SizedBox(height: 16),
-                       // SwapImageIconWidget(),
+                        SwapImageIconWidget(),
                         const SizedBox(height: 16),
                         CurrencyInputCard(
-                          label: 'Converted Amount',
-                          flag: 'US',
-                          currencyCode: 'USD',
-                          amount: '736.70',
-                          type: "Target",
+                          isBase: false,
                         ),
                   ],
                 ),
               ),
+              ExchangeRateWidget()
               
-              const SizedBox(height: 24),
-              const Text(
-                'Indicative Exchange Rate',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                '1 SGD = 0.7367 USD',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
             ],
           ),
         ),

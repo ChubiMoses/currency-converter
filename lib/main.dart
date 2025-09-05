@@ -1,6 +1,7 @@
-import 'package:ccapp/utils/utils.dart';
+import 'package:ccapp/utils/utils_provider.dart';
 import 'package:ccapp/views/currency_converter_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/provider.dart' as provider;
@@ -9,7 +10,11 @@ import 'package:provider/provider.dart' as provider;
 
 void main() {
     WidgetsFlutterBinding.ensureInitialized();
-      runApp(const ProviderScope(child: MyApp()));
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,16 +25,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         provider.ChangeNotifierProvider(
-          create: (_) => Utils(),
+          create: (_) => UtilsProvider(),
         ),
 
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Currency Converter',
         theme: ThemeData(
           primarySwatch: Colors.indigo,
           scaffoldBackgroundColor:Color(0xFFF6F6F6),
-      
+          
         ),
         home: const CurrencyConverterView(),
       ),
