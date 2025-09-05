@@ -8,9 +8,9 @@ class CurrencyConverterRepo {
   final Dio dio = Dio();
   
 
-  Future<CurrencyConverterModel> fetchExchangeRate(String baseCode, String targetCode, double amount) async {
+  Future<CurrencyConverterModel> fetchExchangeRate(String baseCode, String targetCode, String amount) async {
     try {
-      String path = '${URLString.currencyConverterUrl}$baseCode/$targetCode/${amount.toString()}';
+      String path = '${URLString.currencyConverterUrl}$baseCode/$targetCode/$amount';
       final response =
           await Network.noInterceptor().call(path, RequestMethod.get);
       final responseModel = CurrencyConverterModel.fromJson(response.data);
@@ -19,9 +19,6 @@ class CurrencyConverterRepo {
       rethrow;
     }
   }
-
-
-
 }
 
 final currencyConverterRepo = Provider((ref) => CurrencyConverterRepo());

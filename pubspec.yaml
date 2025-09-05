@@ -34,6 +34,7 @@ dependencies:
   flutter_svg: ^2.2.1
   flutter_riverpod: ^2.6.1
   dio: ^5.9.0
+  provider:
 
 
   # The following adds the Cupertino Icons font to your application.

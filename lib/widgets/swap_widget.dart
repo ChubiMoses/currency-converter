@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class SwapWidget extends StatelessWidget {
-  const SwapWidget({super.key});
+class SwapImageIconWidget extends StatelessWidget {
+  const SwapImageIconWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

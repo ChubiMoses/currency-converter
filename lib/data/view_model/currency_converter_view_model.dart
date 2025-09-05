@@ -8,7 +8,7 @@ class CurrencyConverterViewViewModel extends StateNotifier<CurrencyConverterStat
   final Ref ref;
   CurrencyConverterViewViewModel(this.ref) : super(CurrencyConverterInitial());
 
-  Future<CurrencyConverterModel> currencyConverter(String baseCode, String targetCode, double amount) async {
+  Future<CurrencyConverterModel> currencyConverter({required baseCode, required String targetCode, required String amount}) async {
     try {
       state = CurrencyConverterLoading();
       final result = await ref.read(currencyConverterRepo).fetchExchangeRate(baseCode, targetCode, amount);
@@ -21,6 +21,6 @@ class CurrencyConverterViewViewModel extends StateNotifier<CurrencyConverterStat
   }
 }
 
-final currencyConverterVVM =
+final currencyConverterVM =
 StateNotifierProvider.autoDispose<CurrencyConverterViewViewModel, CurrencyConverterStates>(
         (ref) => CurrencyConverterViewViewModel(ref));
