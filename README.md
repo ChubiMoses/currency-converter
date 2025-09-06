@@ -50,19 +50,6 @@ flutter pub get
 ```bash
 flutter run --dart-define=API_KEY=your_api_key_here
 ```
-### Project Structure
-
-lib/
-├── data/
-│   ├── global/         # Global configurations and constants
-│   ├── models/         # Data models
-│   ├── repository/     # API and data handling
-│   └── view_model/     # Business logic
-├── providers/          # Riverpod providers
-├── utils/             # Utility functions and constants
-├── views/             # UI screens
-├── widgets/           # Reusable UI components
-└── main.dart          # Application entry point
 
 
 ## Features in Detail
