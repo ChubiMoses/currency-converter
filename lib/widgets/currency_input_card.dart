@@ -5,7 +5,6 @@ import 'package:ccapp/utils/asset_images.dart';
 import 'package:ccapp/utils/debouncer.dart';
 import 'package:ccapp/utils/theme.dart';
 import 'package:ccapp/utils/utils_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +30,12 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
     final viewModel = ref.watch(currencyConverterVM);
 
     return Builder(builder: (context) {
-     
+
 
       if (viewModel is CurrencyConverterLoaded) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          utilsProvider.updateRate(viewModel.currencyConverterViewViewModel.conversionRate.toString());
+          if(!utilsProvider.isSwap){
+             utilsProvider.updateRate(viewModel.currencyConverterViewViewModel.conversionRate.toString());
           if (!utilsProvider.isReverse) {
             utilsProvider.targetAmountController.text = 
                 viewModel.currencyConverterViewViewModel.conversionResult.toString();
@@ -43,6 +43,8 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
             utilsProvider.baseAmountController.text = 
                 viewModel.currencyConverterViewViewModel.conversionResult.toString();
           }
+          }
+         
         });
       }
 
@@ -50,9 +52,9 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.isBase ? utilsProvider.baseCode : utilsProvider.targetCode,
+            widget.isBase ? "Amount" : "Converted Amount",
             style: const TextStyle(
-              color: Colors.grey,
+              color:AppTheme.greyColor,
               fontSize: 14,
             ),
           ),
@@ -79,45 +81,60 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Icon(Icons.keyboard_arrow_down),
+                     Icon(Icons.keyboard_arrow_down, color: AppTheme.greyColor,),
                   ],
                 ),
               ),
-              const Spacer(),
+               SizedBox(width: 50,),
               Expanded(
-                child: TextField(
-                  onChanged: (text) {
-                    _debouncer.run(() {
-                      if (text.isNotEmpty) {
-                        if(!widget.isBase){
-                          utilsProvider.setReverse(true);
-                        } else {
-                          utilsProvider.setReverse(false);
+                child: SizedBox(
+                  width: 200,
+                  child: TextField(
+                    onChanged: (text) {
+                      _debouncer.run(() {
+                        if (text.isNotEmpty) {
+                          // Set reverse flag based on which input field triggered the change
+                          if(!widget.isBase){
+                            utilsProvider.setReverse(true);  // Target field is being edited
+                          } else {
+                            utilsProvider.setReverse(false); // Base field is being edited
+                          }
+                          
+                          // Reset swap flag to ensure normal conversion flow
+                          utilsProvider.setSwap(false);
+                          
+                          // Trigger currency conversion with appropriate base and target currencies
+                          ref.read(currencyConverterVM.notifier).currencyConverter(
+                            baseCode: widget.isBase ? utilsProvider.baseCode : utilsProvider.targetCode,
+                            targetCode: widget.isBase ? utilsProvider.targetCode : utilsProvider.baseCode,
+                            amount: text,
+                          );
+                           //dismiss keyboard when user taps outside of the text field
+                            FocusManager.instance.primaryFocus?.unfocus();
                         }
-                        ref.read(currencyConverterVM.notifier).currencyConverter(
-                          baseCode: widget.isBase ? utilsProvider.baseCode : utilsProvider.targetCode,
-                          targetCode: widget.isBase ? utilsProvider.targetCode : utilsProvider.baseCode,
-                          amount: text,
-                        );
-                      }
-                    });
-                  },
-                  controller: widget.isBase ? utilsProvider.baseAmountController : utilsProvider.targetAmountController,
-                  textAlign: TextAlign.right,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                      borderSide: BorderSide(width: 1, color: Color(0xFFEFEFEF))
+                      });
+                    },
+                    controller: widget.isBase ? utilsProvider.baseAmountController : utilsProvider.targetAmountController,
+                    textAlign: TextAlign.right,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor:AppTheme.textFieldColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        borderSide: BorderSide(width: 1, color: AppTheme.textFieldColor)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        borderSide: BorderSide(width: 1, color: AppTheme.textFieldColor,)
+                      ),
+                      contentPadding: EdgeInsets.all(8),
                     ),
-                    contentPadding: EdgeInsets.all(8),
-                  ),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

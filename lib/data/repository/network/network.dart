@@ -1,6 +1,6 @@
 library network;
 import 'dart:developer';
-import 'package:ccapp/data/global/url_strings.dart';
+import 'package:ccapp/data/global/url_config.dart';
 import 'package:ccapp/data/repository/network/logger.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';

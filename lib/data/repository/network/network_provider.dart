@@ -13,7 +13,7 @@ class Network {
   final _dioBaseOptions = BaseOptions(
     connectTimeout: connectTimeOut,
     receiveTimeout: receiverTimeOut,
-    baseUrl: URLString.baseUrl,
+    baseUrl: UrlConfig.baseUrl,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -101,9 +101,7 @@ class Network {
         log("$path: ${error.response?.statusCode} code");
         log("API response: ${error.response}");
       }
-      print(stackTrace);
-      print("ERROR RESPONSE: ${error.response}");
-      print("ERROR MESSAGE: ${error.message}");
+
       return Future.error(
           error.response?.data["message"] ??
               error.response?.data["errors"] ??

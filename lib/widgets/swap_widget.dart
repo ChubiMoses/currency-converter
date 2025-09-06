@@ -24,6 +24,7 @@ class SwapImageIconWidget extends StatelessWidget {
             child: InkWell(
               onTap: (){
                 final utilsProvider = context.read<UtilsProvider>();
+                utilsProvider.setSwap(true);
                 // Swap base currency to target currency
                 final tempCode = utilsProvider.baseCode;
       
@@ -32,7 +33,7 @@ class SwapImageIconWidget extends StatelessWidget {
                 
                 // Update target with base values
                 utilsProvider.setTargetCode(tempCode);
-                 utilsProvider.initTextField();
+                 utilsProvider.initFields();
 
               },
               child: CircleAvatar(

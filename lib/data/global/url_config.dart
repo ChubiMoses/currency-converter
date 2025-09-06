@@ -1,11 +1,11 @@
 
-import 'package:ccapp/data/global/constants.dart';
+import 'package:ccapp/data/global/api_key.dart';
 
-class URLString{
+class UrlConfig{
 
    static String get apiKey => const String.fromEnvironment('API_KEY', 
     defaultValue: '');  
   static const  baseUrl = "https://v6.exchangerate-api.com/";
-  static String get currencyConverterUrl => "$baseUrl/v6/${Constants.apiKey}/pair/";
+  static String get currencyConverterUrl => "$baseUrl/v6/${Apikey.apiKey}/pair/";
   
 }

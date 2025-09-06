@@ -1,4 +1,4 @@
-import 'package:ccapp/data/global/url_strings.dart';
+import 'package:ccapp/data/global/url_config.dart';
 import 'package:ccapp/data/models/currency_conveter_model.dart';
 import 'package:ccapp/data/repository/network/network.dart';
 import 'package:dio/dio.dart';
@@ -10,7 +10,7 @@ class CurrencyConverterRepo {
 
   Future<CurrencyConverterModel> fetchExchangeRate(String baseCode, String targetCode, String amount) async {
     try {
-      String path = '${URLString.currencyConverterUrl}$baseCode/$targetCode/$amount';
+      String path = '${UrlConfig.currencyConverterUrl}$baseCode/$targetCode/$amount';
       final response =
           await Network.noInterceptor().call(path, RequestMethod.get);
       final responseModel = CurrencyConverterModel.fromJson(response.data);

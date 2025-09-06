@@ -4,17 +4,20 @@ import 'package:flutter/widgets.dart';
 class UtilsProvider extends ChangeNotifier {
  
 
-  TextEditingController _baseAmountController = TextEditingController(text: "0.0");
-  TextEditingController _targetAmountController = TextEditingController(text: "0.0");
+  final TextEditingController _baseAmountController = TextEditingController(text: "0.0");
+  final TextEditingController _targetAmountController = TextEditingController(text: "0.0");
 
   String _baseCode = "EUR";
   String _targetCode = "GBP";
-  String _converstionRate = "...";
+  String _converstionRate = "--";
   
 
   bool _isReverse = false;
+   bool _isSwap = false;
   
   bool get isReverse => _isReverse;
+  bool get isSwap => _isSwap;
+ 
   TextEditingController get baseAmountController =>  _baseAmountController;
   TextEditingController get targetAmountController => _targetAmountController;
   String get baseCode => _baseCode;
@@ -23,7 +26,10 @@ class UtilsProvider extends ChangeNotifier {
   
   
   
-  
+   void setSwap(bool value) {
+    _isSwap = value;
+    notifyListeners();
+  }
   
   void updateRate(String value) {
     _converstionRate = value;
@@ -51,9 +57,11 @@ class UtilsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initTextField(){
+  void initFields(){
     _baseAmountController.text = "0.0";
     _targetAmountController.text = "0.0";
+    _converstionRate = "--";
+
     notifyListeners();
   }
 

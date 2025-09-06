@@ -1,74 +1,84 @@
 
-import 'package:ccapp/utils/utils_provider.dart';
+import 'package:ccapp/utils/theme.dart';
 import 'package:ccapp/widgets/currency_input_card.dart';
 import 'package:ccapp/widgets/exchange_rate_widget.dart';
 import 'package:ccapp/widgets/swap_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CurrencyConverterView extends StatelessWidget {
   const CurrencyConverterView({super.key});
 
   @override
   Widget build(BuildContext context) {
-   // final utilsProvider = context.watch<UtilsProvider>();
 
-    return Scaffold(
-      backgroundColor:Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-           
-            children: [
-              const Text(
-                'Currency Converter',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1A237E),
+    return GestureDetector(
+      onTap: () {
+        //dismiss keyboard when user taps outside of the text field
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        backgroundColor:Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+               crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 const SizedBox(height: 40),
+                Center(
+                  child: const Text(
+                    'Currency Converter',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Check live rates, set rate alerts, receive\nnotifications and more.',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
+                const SizedBox(height: 8),
+                Center(
+                  child: const Text(
+                    'Check live rates, set rate alerts, receive\nnotifications and more.',
+                    style: TextStyle(
+                      color:  AppTheme.greyColor,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40),
-               Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
+                const SizedBox(height: 40),
+                 Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                          CurrencyInputCard(
+                            isBase: true,
+                          ),
+                          const SizedBox(height: 16),
+                          SwapImageIconWidget(),
+                          const SizedBox(height: 16),
+                          CurrencyInputCard(
+                            isBase: false,
+                          ),
                     ],
                   ),
-                  child: Column(
-                    children: [
-                        CurrencyInputCard(
-                          isBase: true,
-                        ),
-                        const SizedBox(height: 16),
-                        SwapImageIconWidget(),
-                        const SizedBox(height: 16),
-                        CurrencyInputCard(
-                          isBase: false,
-                        ),
-                  ],
                 ),
-              ),
-              ExchangeRateWidget()
-              
-            ],
+                ExchangeRateWidget()
+                
+              ],
+            ),
           ),
         ),
       ),
