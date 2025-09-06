@@ -15,7 +15,7 @@ class CurrencyConverterViewViewModel extends StateNotifier<CurrencyConverterStat
       state = CurrencyConverterLoaded(result);
       return result;
     } catch (e) {
-      state = CurrencyConverterError(e.toString());
+      state = CurrencyConverterError(e.toString() == "Forbidden"? "invalid-key, Please read README" : e.toString());
       rethrow;
     }
   }

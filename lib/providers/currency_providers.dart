@@ -68,8 +68,8 @@ class CurrencyState {
 // StateNotifier for managing currency state
 class CurrencyStateNotifier extends StateNotifier<CurrencyState> {
   CurrencyStateNotifier() : super(CurrencyState(
-    baseAmountController: TextEditingController(text: "0.0"),
-    targetAmountController: TextEditingController(text: "0.0"),
+    baseAmountController: TextEditingController(text: "0"),
+    targetAmountController: TextEditingController(text: "0"),
   ));
 
   void setBaseCode(String code) {
@@ -93,8 +93,8 @@ class CurrencyStateNotifier extends StateNotifier<CurrencyState> {
   }
 
   void initFields() {
-    state.baseAmountController.text = "0.0";
-    state.targetAmountController.text = "0.0";
+    state.baseAmountController.text = "0";
+    state.targetAmountController.text = "0";
     state = state.copyWith(conversionRate: "--");
   }
 

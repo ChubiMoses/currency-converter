@@ -2,9 +2,9 @@
 import 'package:ccapp/data/view_model/currency_converter_states.dart';
 import 'package:ccapp/data/view_model/currency_converter_view_model.dart';
 import 'package:ccapp/providers/currency_providers.dart';
-import 'package:ccapp/utils/asset_images.dart';
 import 'package:ccapp/utils/debouncer.dart';
 import 'package:ccapp/utils/theme.dart';
+import 'package:ccapp/widgets/currency_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -99,6 +99,8 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
                         }
                         notifier.setSwap(false);
 
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         ref.read(currencyConverterVM.notifier).currencyConverter(
                               baseCode: widget.isBase
                                   ? currencyState.baseCode
@@ -152,71 +154,8 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
-        return Container(
-          height: 400,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              Center(
-                child: Container(
-                  height: 5,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: AppTheme.lightGrey,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                'Select Balance',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  children: [
-                    _buildCurrencyTile(context, 'SDG', 'Sudan', CurrencyFlags.sdg),
-                    _buildCurrencyTile(context, 'USD', 'United States', CurrencyFlags.usd),
-                    _buildCurrencyTile(context, 'GBP', 'United Kingdom', CurrencyFlags.gbp),
-                    _buildCurrencyTile(context, 'JPY', 'Japan', CurrencyFlags.jpy),
-                    _buildCurrencyTile(context, 'EUR', 'European Union', CurrencyFlags.eur),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => CurrencyBottomSheet(isBase: widget.isBase),
     );
   }
 
-  Widget _buildCurrencyTile(BuildContext context, String code, String country, String flag) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        backgroundImage: AssetImage(flag),
-      ),
-      title: Text(code, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(country),
-      trailing: Text(
-        '0.0',
-        style: const TextStyle(fontSize: 20),
-      ),
-      onTap: () {
-        if (widget.isBase) {
-          ref.read(currencyStateProvider.notifier).setBaseCode(code);
-        } else {
-          ref.read(currencyStateProvider.notifier).setTargetCode(code);
-        }
-        Navigator.pop(context);
-      },
-    );
-  }
 }

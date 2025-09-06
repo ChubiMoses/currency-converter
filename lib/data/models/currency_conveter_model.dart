@@ -11,9 +11,11 @@ class CurrencyConverterModel {
         required this.targetCode,
         required this.conversionRate,
         required this.conversionResult,
+        required  this.error,
     });
 
     final String? result;
+    final String? error;
     final String? documentation;
     final String? termsOfUse;
     final int? timeLastUpdateUnix;
@@ -28,6 +30,7 @@ class CurrencyConverterModel {
     factory CurrencyConverterModel.fromJson(Map<String, dynamic> json){ 
         return CurrencyConverterModel(
             result: json["result"],
+            error: json["error-type"],
             documentation: json["documentation"],
             termsOfUse: json["terms_of_use"],
             timeLastUpdateUnix: json["time_last_update_unix"],

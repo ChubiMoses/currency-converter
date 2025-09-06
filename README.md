@@ -1,5 +1,7 @@
 # Currency Converter App
 
+![Currency Converter App](assets/ccap.png)
+
 A modern, user-friendly currency converter application built with Flutter that provides real-time currency conversion rates.
 
 ## Features
@@ -48,7 +50,7 @@ flutter pub get
 ```bash
 flutter run --dart-define=API_KEY=your_api_key_here
 ```
-### Installation
+### Project Structure
 
 lib/
 ├── data/
