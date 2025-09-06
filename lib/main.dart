@@ -1,20 +1,15 @@
-import 'package:ccapp/utils/utils_provider.dart';
 import 'package:ccapp/views/currency_converter_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/provider.dart' as provider;
-
-
 
 void main() {
-    WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    runApp(const ProviderScope(child: MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,23 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        provider.ChangeNotifierProvider(
-          create: (_) => UtilsProvider(),
-        ),
-
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Currency Converter',
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-          scaffoldBackgroundColor:Color(0xFFF6F6F6),
-          
-        ),
-        home: const CurrencyConverterView(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Currency Converter',
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: Color(0xFFF6F6F6),
       ),
+      home: const CurrencyConverterView(),
     );
   }
 }

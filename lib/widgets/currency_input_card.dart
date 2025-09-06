@@ -1,13 +1,12 @@
 
 import 'package:ccapp/data/view_model/currency_converter_states.dart';
 import 'package:ccapp/data/view_model/currency_converter_view_model.dart';
+import 'package:ccapp/providers/currency_providers.dart';
 import 'package:ccapp/utils/asset_images.dart';
 import 'package:ccapp/utils/debouncer.dart';
 import 'package:ccapp/utils/theme.dart';
-import 'package:ccapp/utils/utils_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 
 class CurrencyInputCard extends ConsumerStatefulWidget {
   final bool isBase;
@@ -26,126 +25,127 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
 
   @override
   Widget build(BuildContext context) {
-    final utilsProvider = context.watch<UtilsProvider>();
+    final currencyState = ref.watch(currencyStateProvider);
     final viewModel = ref.watch(currencyConverterVM);
 
-    return Builder(builder: (context) {
-
-
-      if (viewModel is CurrencyConverterLoaded) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if(!utilsProvider.isSwap){
-             utilsProvider.updateRate(viewModel.currencyConverterViewViewModel.conversionRate.toString());
-          if (!utilsProvider.isReverse) {
-            utilsProvider.targetAmountController.text = 
+    if (viewModel is CurrencyConverterLoaded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!currencyState.isSwap) {
+          ref.read(currencyStateProvider.notifier).updateRate(
+              viewModel.currencyConverterViewViewModel.conversionRate.toString());
+          if (!currencyState.isReverse) {
+            currencyState.targetAmountController.text =
                 viewModel.currencyConverterViewViewModel.conversionResult.toString();
           } else {
-            utilsProvider.baseAmountController.text = 
+            currencyState.baseAmountController.text =
                 viewModel.currencyConverterViewViewModel.conversionResult.toString();
           }
-          }
-         
-        });
-      }
+        }
+      });
+    }
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.isBase ? "Amount" : "Converted Amount",
-            style: const TextStyle(
-              color:AppTheme.greyColor,
-              fontSize: 14,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.isBase ? "Amount" : "Converted Amount",
+          style: const TextStyle(
+            color: AppTheme.greyColor,
+            fontSize: 14,
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              InkWell(
-                onTap: () => _showCurrencyPicker(context, utilsProvider),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundImage:AssetImage(widget.isBase ? utilsProvider.baseFlag : utilsProvider.targetFlag,),
-                      child: Text(
-                        widget.isBase ? utilsProvider.baseCode : utilsProvider.targetCode,
-                        style: const TextStyle(fontSize: 12),
-                      ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            InkWell(
+              onTap: () => _showCurrencyPicker(context),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 15,
+                    backgroundImage: AssetImage(
+                      widget.isBase ? currencyState.baseFlag : currencyState.targetFlag,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      widget.isBase ? utilsProvider.baseCode : utilsProvider.targetCode,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Text(
+                      widget.isBase ? currencyState.baseCode : currencyState.targetCode,
+                      style: const TextStyle(fontSize: 12),
                     ),
-                     Icon(Icons.keyboard_arrow_down, color: AppTheme.greyColor,),
-                  ],
-                ),
-              ),
-               SizedBox(width: 50,),
-              Expanded(
-                child: SizedBox(
-                  width: 200,
-                  child: TextField(
-                    onChanged: (text) {
-                      _debouncer.run(() {
-                        if (text.isNotEmpty) {
-                          // Set reverse flag based on which input field triggered the change
-                          if(!widget.isBase){
-                            utilsProvider.setReverse(true);  // Target field is being edited
-                          } else {
-                            utilsProvider.setReverse(false); // Base field is being edited
-                          }
-                          
-                          // Reset swap flag to ensure normal conversion flow
-                          utilsProvider.setSwap(false);
-                          
-                          // Trigger currency conversion with appropriate base and target currencies
-                          ref.read(currencyConverterVM.notifier).currencyConverter(
-                            baseCode: widget.isBase ? utilsProvider.baseCode : utilsProvider.targetCode,
-                            targetCode: widget.isBase ? utilsProvider.targetCode : utilsProvider.baseCode,
-                            amount: text,
-                          );
-                           //dismiss keyboard when user taps outside of the text field
-                            FocusManager.instance.primaryFocus?.unfocus();
-                        }
-                      });
-                    },
-                    controller: widget.isBase ? utilsProvider.baseAmountController : utilsProvider.targetAmountController,
-                    textAlign: TextAlign.right,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor:AppTheme.textFieldColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        borderSide: BorderSide(width: 1, color: AppTheme.textFieldColor)
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        borderSide: BorderSide(width: 1, color: AppTheme.textFieldColor,)
-                      ),
-                      contentPadding: EdgeInsets.all(8),
-                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.isBase ? currencyState.baseCode : currencyState.targetCode,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Icon(Icons.keyboard_arrow_down, color: AppTheme.greyColor),
+                ],
+              ),
+            ),
+            const SizedBox(width: 50),
+            Expanded(
+              child: SizedBox(
+                width: 200,
+                child: TextField(
+                  onChanged: (text) {
+                    _debouncer.run(() {
+                      if (text.isNotEmpty) {
+                        final notifier = ref.read(currencyStateProvider.notifier);
+                        if (!widget.isBase) {
+                          notifier.setReverse(true);
+                        } else {
+                          notifier.setReverse(false);
+                        }
+                        notifier.setSwap(false);
+
+                        ref.read(currencyConverterVM.notifier).currencyConverter(
+                              baseCode: widget.isBase
+                                  ? currencyState.baseCode
+                                  : currencyState.targetCode,
+                              targetCode: widget.isBase
+                                  ? currencyState.targetCode
+                                  : currencyState.baseCode,
+                              amount: text,
+                            );
+                      }
+                    });
+                  },
+                  controller: widget.isBase
+                      ? currencyState.baseAmountController
+                      : currencyState.targetAmountController,
+                  textAlign: TextAlign.right,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: AppTheme.textFieldColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      borderSide:
+                          BorderSide(width: 1, color: AppTheme.textFieldColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      borderSide:
+                          BorderSide(width: 1, color: AppTheme.textFieldColor),
+                    ),
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ],
-      );
-    });
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
-  void _showCurrencyPicker(BuildContext context, UtilsProvider utilsProvider) {
+  void _showCurrencyPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppTheme.backgroundColor,
@@ -155,22 +155,22 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
       builder: (context) {
         return Container(
           height: 400,
-          padding: const EdgeInsets.symmetric(vertical:16, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 8,),
+              const SizedBox(height: 8),
               Center(
                 child: Container(
                   height: 5,
                   width: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: AppTheme.lightGrey
+                    color: AppTheme.lightGrey,
                   ),
                 ),
               ),
-              SizedBox(height: 15,),
+              const SizedBox(height: 15),
               const Text(
                 'Select Balance',
                 style: TextStyle(
@@ -182,11 +182,11 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
               Expanded(
                 child: ListView(
                   children: [
-                    _buildCurrencyTile(context, utilsProvider, 'SDG', '0.0', 'European Union', CurrencyFlags.sdg ),
-                    _buildCurrencyTile(context, utilsProvider, 'USD', '0.0', 'United States', CurrencyFlags.usd ),
-                    _buildCurrencyTile(context, utilsProvider, 'GBP', '0.0', 'United Kingdom', CurrencyFlags.gbp ),
-                    _buildCurrencyTile(context, utilsProvider, 'JPY', '0.0', 'Japan', CurrencyFlags.jpy ),
-                    _buildCurrencyTile(context, utilsProvider, 'EUR', '0.0', 'European Union', CurrencyFlags.eur),
+                    _buildCurrencyTile(context, 'SDG', 'Sudan', CurrencyFlags.sdg),
+                    _buildCurrencyTile(context, 'USD', 'United States', CurrencyFlags.usd),
+                    _buildCurrencyTile(context, 'GBP', 'United Kingdom', CurrencyFlags.gbp),
+                    _buildCurrencyTile(context, 'JPY', 'Japan', CurrencyFlags.jpy),
+                    _buildCurrencyTile(context, 'EUR', 'European Union', CurrencyFlags.eur),
                   ],
                 ),
               ),
@@ -197,23 +197,23 @@ class _CurrencyInputCardState extends ConsumerState<CurrencyInputCard> {
     );
   }
 
-  Widget _buildCurrencyTile(BuildContext context, UtilsProvider utilsProvider, String code, String symbol, String country, String flag) {
+  Widget _buildCurrencyTile(BuildContext context, String code, String country, String flag) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
-       backgroundImage: AssetImage(flag),
+        backgroundImage: AssetImage(flag),
       ),
       title: Text(code, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(country),
       trailing: Text(
-        symbol,
+        '0.0',
         style: const TextStyle(fontSize: 20),
       ),
       onTap: () {
         if (widget.isBase) {
-          utilsProvider.setBaseCode(code);
+          ref.read(currencyStateProvider.notifier).setBaseCode(code);
         } else {
-          utilsProvider.setTargetCode(code);
+          ref.read(currencyStateProvider.notifier).setTargetCode(code);
         }
         Navigator.pop(context);
       },
